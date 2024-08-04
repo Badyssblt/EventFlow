@@ -7,8 +7,9 @@ import EventDashboard from '../components/dashboard/EventDashboard';
 import { isTokenExpired } from '../utils/axiosInstance';
 import { Navigate, redirect } from 'react-router';
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom'; // Updated import for useNavigate
+import { useNavigate } from 'react-router-dom';
 import TicketDashboard from '../components/dashboard/TicketDashboard';
+import UserDashboard from '../components/dashboard/UserDashboard';
 
 
 function Dashboard() {
@@ -24,6 +25,8 @@ function Dashboard() {
         return <EventDashboard/>
       case 'tickets':
         return <TicketDashboard/>
+      case 'profile':
+        return <UserDashboard/>
       default: 
         return <Home/>
     }

@@ -10,6 +10,7 @@ function Events() {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(false);
     const [eventsByCategory, setEventsByCategory] = useState({});
+    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchEvents = async () => {
         setLoading(true);
@@ -17,7 +18,7 @@ function Events() {
             const response = await axiosInstance.get('/events/popular');
             setEventsPopular(response.data);
         } catch (error) {
-            setLoading(false); // Set loading to false on error
+            setLoading(false);
         }
         setLoading(false);
     }
@@ -51,14 +52,36 @@ function Events() {
         getEvents();
     }, []);
 
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const filterEvents = (events) => {
+        if (!searchQuery) return events;
+        return events.filter(event => 
+            event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            event.description.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    };
+
     return (
         <>
             <Loader state={loading} />
             <Header />
+            <div className='mx-4'>
+                <h2 className='font-bold text-lg'>Rechercher</h2>
+                <input
+                    type="text"
+                    placeholder="Rechercher des événements..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className='w-full py-2 border pl-4 rounded-full'
+                />
+            </div>
             <div className='px-4'>
-                <RowSlider title={"Evènement populaire"} events={eventsPopular.slice(0, 5)} />
+                <RowSlider title={"Evènement populaire"} events={filterEvents(eventsPopular).slice(0, 5)} />
                 {Object.keys(eventsByCategory).map(categoryName => (
-                    <RowSlider key={categoryName} title={categoryName} events={eventsByCategory[categoryName].slice(0, 5)} />
+                    <RowSlider key={categoryName} title={categoryName} events={filterEvents(eventsByCategory[categoryName]).slice(0, 5)} />
                 ))}
             </div>
         </>

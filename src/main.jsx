@@ -13,6 +13,11 @@ import Event from './pages/Event.jsx'
 import Payment from './pages/Payment.jsx'
 import PaymentValidation from './pages/PaymentValidation.jsx'
 import Ticket from './pages/Ticket.jsx'
+import CheckVerification from './pages/CheckVerification.jsx'
+import Register from './pages/Register.jsx'
+import CreateEvent from './pages/CreateEvent.jsx';
+import Modal from 'react-modal';
+
 
 const router = createBrowserRouter([
   {
@@ -46,8 +51,23 @@ const router = createBrowserRouter([
   {
     path: '/ticket',
     element: <Ticket/>
+  },
+  {
+    path: '/check/:eventId/user/:userId',
+    element: <CheckVerification/>
+  },
+  {
+    path: '/register',
+    element: <Register/>
+  },
+  {
+    path: '/event/create',
+    element: <CreateEvent/>
   }
 ]);
+
+Modal.setAppElement('#root');
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

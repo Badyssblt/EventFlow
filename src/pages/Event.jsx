@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
-import { axiosInstance } from '../utils/axiosInstance';
+import { axiosInstance, isTokenExpired } from '../utils/axiosInstance';
 import Loader from '../components/Loader/Loader';
 import Header from '../components/Header';
 import EventMap from '../components/EventMap';
@@ -8,6 +8,8 @@ import LoaderButton from '../components/Loader/LoaderButton';
 import SuccessNotification from '../components/Notification/SuccessNotification';
 import ErrorNotification from '../components/Notification/ErrorNotification';
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import getUser from '../utils/UserUtils';
 
 function Event() {
 
@@ -18,6 +20,7 @@ function Event() {
     const [showNotification, setShowNotification] = useState(false);
     const [available, setAvailable] = useState(true);
     const [showErrorNotification, setShowErrorNotification] = useState("");
+    const [user, setUser] = useState();
 
     const navigate = useNavigate();
 
@@ -41,7 +44,12 @@ function Event() {
     useEffect(() => {
         eventId = parseInt(eventId);
         getEvent();
-        
+        const token = Cookies.get('token');
+        if(!isTokenExpired(token)){
+            setUser(getUser());
+        }else {
+            setUser(null);
+        }
     }, [])
 
   return (
@@ -108,9 +116,9 @@ function Event() {
                         <p><span className='text-xl font-bold text-blue-600'>{event.event.price} €</span> /Personne</p>
                     </div>
                 </div>
-                {event.isIn && <Link className='bg-blue-600 text-white px-6 py-1 rounded-full flex items-center gap-2' to={"/dashboard"}>Mon ticket</Link>}
+                {event.isIn && <Link className='bg-blue-600 text-white px-6 py-1 rounded-full flex items-center gap-2' to={"/ticket"} state={{ticketId: event.token}}>Mon ticket</Link>}
 
-                {  available && !event.isIn && <Link to={`/payment/${event.event.id}`} state={{price: event.event.price}} className='bg-blue-600 text-white px-6 py-1 rounded-full flex items-center gap-2' >
+                {  available && !event.isIn && user && <Link to={`/payment/${event.event.id}`} state={{price: event.event.price}} className='bg-blue-600 text-white px-6 py-1 rounded-full flex items-center gap-2' >
                     Je réserve
                     <LoaderButton state={loadingBook}/>
                 </Link>}
@@ -118,6 +126,10 @@ function Event() {
                     Je réserve
                     <LoaderButton state={loadingBook}/>
                 </button>}
+                {  !user && <Link to={`/login`} state={{price: event.event.price}} className='bg-blue-600 text-white px-6 py-1 rounded-full flex items-center gap-2' >
+                    Je réserve
+                    <LoaderButton state={loadingBook}/>
+                </Link>}
             </div>
         </div>
     </div>}

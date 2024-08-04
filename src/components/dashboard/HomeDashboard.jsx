@@ -42,13 +42,14 @@ function HomeDashboard() {
 
   return (
     <>
+
     <div>
         <h2 className='font-bold text-xl'>Bon retour !</h2>
         <p>John Doe</p>
     </div>
         <Loader state={loading}/>
        <RowSlider title={"Evènements à venir"} events={eventToCome}/>
-       <RowSlider title={"Mes évènements"} events={userEvent}/>
+       <RowSlider title={"Mes évènements"} events={userEvent} admin={true}/>
     </>
   )
 }

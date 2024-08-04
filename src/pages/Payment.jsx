@@ -34,6 +34,7 @@ function Payment() {
         if(location.state == null) navigate('/event/' + eventId);
         if(Cookies.get('token') && isTokenExpired(Cookies.get('token'))) navigate('/login');
         getEvent();
+        console.log(price);
     }, [])
 
     const stripePromise = loadStripe('pk_test_51NiItcEulzwDXkR892rdv8Sz3BbZxi7HESLuwLjYCPfpFY6NUMYWHUIgg9EZGrBYptLX4hMNHOxxzXHX7PT7xoiC00wBw9SrIT');

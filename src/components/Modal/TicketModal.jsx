@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router';
 function TicketModal({ event, setShow, isPage = false }) {
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const navigate = useNavigate();
+  const [status, setStatus] = useState('');
 
   const getQrCode = async () => {
     try {
@@ -37,6 +38,7 @@ function TicketModal({ event, setShow, isPage = false }) {
       }else {
         getQrCode();
       }
+      setStatus(event.status === 'checkIn' ? 'Validé' : 'En attente');
   }, [event.event.id]);
 
   return (
@@ -68,7 +70,11 @@ function TicketModal({ event, setShow, isPage = false }) {
                 <div className='flex justify-between p-2'>
                   <div className='flex flex-col'>
                     <p className='text-gray-400'>Prix total:</p>
-                    <span className='font-bold'>24€</span>
+                    <span className='font-bold'>{ event.event.price } €</span>
+                  </div>
+                  <div className='flex flex-col'>
+                    <p className='text-gray-400'>Status:</p>
+                    <span className='font-bold'>{ status }  </span>
                   </div>
                 </div>
                 <div className='flex justify-center'>

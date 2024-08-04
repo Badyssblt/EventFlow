@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import DateFormatter from '../../utils/DateFormater'
+import InvitationModal from '../Modal/InvitationModal'
 
 /**
  * CardEvent
  * @param {any} {event}
  * @returns {any}
  */
-function Card({event}) {
+function Card({event, admin}) {
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleModal = () => {
+        setIsOpen(!isOpen);
+    }
+
   return (
+    <>
     <Link to={"/event/" + event.id}>
     <div className='w-60'>
         <div className="h-64 w-full overflow-hidden">
@@ -31,9 +40,15 @@ function Card({event}) {
                 <DateFormatter dateIso={event.started_at}/>
             </div>
         </div>
+        
 
     </div>
     </Link>  
+    {admin && <div>
+        <button className='bg-blue-600 text-white w-full py-2 mt-2 rounded-full' onClick={toggleModal}>Inviter des personnes</button>
+        <InvitationModal open={isOpen} setOpen={setIsOpen}/>
+    </div>}
+    </>
     )
 }
 

@@ -5,20 +5,20 @@ import Cookies from 'js-cookie'
 import { axiosInstance } from '../utils/axiosInstance';
 import { Link, redirect, useNavigate } from 'react-router-dom';
 
-function Login() {
+function Register() {
 
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    const login = async (data) => {
+    const register = async (data) => {
         try {
-            const response = await axiosInstance.post('/login_check', {
-                username: data.email,
-                password: data.password
+            const response = await axiosInstance.post('/register', {
+                email: data.email,
+                password: data.password,
+                name: data.name
             });
-            if(response.data.token){
-                Cookies.set('token', response.data.token);
-                navigate('/dashboard');
+            if(response.data){
+                navigate('/login');
             }
         } catch (error) {
             setError("Le mot de passe est incorrect");
@@ -54,7 +54,7 @@ function Login() {
             </a>
 
             <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-            Connectez-vous sur EventFlow
+            Inscrivez vous sur EventFlow
             </h2>
         </div>
         </section>
@@ -89,22 +89,25 @@ function Login() {
 
             </div>
 
-            <Form submitText={"Me connecter"} onSubmit={login}>
-                <div className='flex flex-col'>
-                    <label htmlFor="email" className='font-semibold'>Entrer votre email</label>
-                    <input type="email" name='email' placeholder='Entrer votre email' className='px-4 py-2 border rounded-lg' autoComplete='off'/>
+            <Form submitText={"Je m'inscris"} onSubmit={register}>
+                <div className='flex flex-col mb-2'>
+                    <label htmlFor="name">Entrer votre nom</label>
+                    <input type="text" name='name' placeholder='Entrer votre nom' className='px-4 py-2 border rounded-lg'/>
                 </div>
-                <div className='flex flex-col my-2'>
-                    <label htmlFor="password" className='font-semibold'>Entrer votre mot de passe</label>
-                    <input type="password" name='password' placeholder='Entrer votre mot de passe' className='px-4 py-2 border rounded-lg' autoComplete='off'/>
+                <div className='flex flex-col mb-2'>
+                    <label htmlFor="email">Entrer votre email</label>
+                    <input type="email" name='email' placeholder='Entrer votre email' className='px-4 py-2 border rounded-lg'/>
                 </div>
-            
+                <div className='flex flex-col mb-2'>
+                    <label htmlFor="password">Entrer votre mot de passe</label>
+                    <input type="password" name='password' placeholder='Entrer votre mot de passe' className='px-4 py-2 border rounded-lg'/>
+                </div>
                 <div>
                     <p>{error}</p>
                 </div>
             </Form>
-            <div className='flex flex-col mt-2'>
-                <p>Pas encore de compte ? <Link to={"/register"} className='text-blue-600 font-bold'>Je m'inscris</Link></p>
+            <div className='flex flex-col items-center mt-2'>
+                <p>Vous avez déjà un compte ? <Link to={"/login"} className='text-blue-600 font-bold'>Je me connecte</Link></p>
             </div>
         </div>
         </main>
@@ -114,4 +117,4 @@ function Login() {
   )
 }
 
-export default Login
+export default Register

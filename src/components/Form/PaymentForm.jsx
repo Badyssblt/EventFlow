@@ -34,6 +34,7 @@ const PaymentForm = ({eventId, amount}) => {
         setLoading(true);
 
         try {
+            amount = Math.floor(amount * 100);
             const response = await axiosInstance.post('/create-payment-intent', { amount });
             const { clientSecret } = response.data;
 

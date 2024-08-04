@@ -5,7 +5,7 @@ import Card from '../Card/Card'
 import Loader from '../Loader/Loader'
 
 
-function RowSlider({title, events}) {
+function RowSlider({title, events, admin}) {
 
 
   return (
@@ -16,7 +16,7 @@ function RowSlider({title, events}) {
 
             {events && events.length > 0 ? events.map((event) => (
                     <div key={event.id} className="flex-shrink-0">
-                        <Card event={event} />
+                        <Card event={event} admin={admin}/>
                     </div>
                 )) : <p>Aucun évènement à venir...</p>}
         </div>

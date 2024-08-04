@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import LoaderButton from '../Loader/LoaderButton';
 
 function Form({children, submitText, onSubmit}) {
 
@@ -14,9 +15,11 @@ function Form({children, submitText, onSubmit}) {
       };
 
 
-      const handleSubmit = (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
-        onSubmit(formData);
+        setLoading(true);
+        await onSubmit(formData);
+        setLoading(false);
       };
 
       const childrenWithProps = React.Children.map(children, child => {
@@ -28,7 +31,9 @@ function Form({children, submitText, onSubmit}) {
   return (
     <form onSubmit={handleSubmit}>
         {childrenWithProps}
-        <button type="submit" className='bg-blue-600 text-white px-6 py-2 rounded-full'>{submitText}</button>
+        <button type="submit" className='bg-blue-600 text-white px-6 py-2 rounded-full flex justify-center gap-2 w-full mt-2'>{submitText}
+        <LoaderButton state={loading}/>
+        </button>
     </form>
   )
 }
