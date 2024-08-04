@@ -22,7 +22,7 @@ class Invitation
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\Column(type: Types::TEXT, unique: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $token = null;
 
     #[ORM\Column(length: 255)]

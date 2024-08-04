@@ -35,7 +35,6 @@ class EventController extends AbstractController
         if (!$user) return $this->json(['message' => 'Vous devez vous connectez'], Response::HTTP_UNAUTHORIZED);
 
         $event->setOwner($user);
-
         if (isset($formData['name'])) {
             $event->setName($formData['name']);
         }
@@ -60,6 +59,10 @@ class EventController extends AbstractController
         }
         if (isset($formData['price'])) {
             $event->setPrice($formData['price']);
+        }
+
+        if(isset($formData['city'])){
+            $event->setCity($formData['city']);
         }
 
         if ($file instanceof UploadedFile) {
@@ -97,17 +100,19 @@ class EventController extends AbstractController
         $user = $this->getUser();
 
         $isIn = false;
+        $participantToken = null;
 
         if ($user) {
             foreach ($event->getParticipants() as $participant) {
                 if ($participant->getUser() === $user) {
                     $isIn = true;
+                    $participantToken = $participant->getIdentifier();
                 }
             }
         }
 
 
-        return $this->json(["event" => $event, "last" => $last, "isIn" => $isIn], Response::HTTP_OK, [], ['groups' => ['item:event']]);
+        return $this->json(["event" => $event, "last" => $last, "isIn" => $isIn, "token" => $participantToken], Response::HTTP_OK, [], ['groups' => ['item:event']]);
     }
 
     #[Route('/events', name: 'app_events', methods: ['GET'])]
@@ -256,7 +261,7 @@ class EventController extends AbstractController
 
         if (!$isIn) return $this->json(["isIn" => $isIn], Response::HTTP_CONFLICT);
 
-        $url = $_ENV['BASE_URL'] . '/event/' . $event->getId() . '/checkIn/' . $user->getId();
+        $url = $_ENV['BASE_URL'] . '/check/' . $event->getId() . '/user/' . $user->getId();
         return $qrCodeService->generateQrCode($url);
     }
 

@@ -8,6 +8,7 @@ use App\Service\StripeService;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
 class StripeController extends AbstractController
 {
@@ -20,8 +21,10 @@ class StripeController extends AbstractController
     }
 
     #[Route('/create-payment-intent', name: 'app_create_payment_intent', methods: ['POST'])]
-    public function createPaymentIntent(StripeService $stripeService): JsonResponse
+    public function createPaymentIntent(StripeService $stripeService, Request $request): JsonResponse
     {
+
+        $amount = $request->getPayload()->get('amount');
 
         $customer = $this->stripe->customers->create([
             'name' => 'John Doe',
@@ -29,7 +32,7 @@ class StripeController extends AbstractController
         ]);
 
 
-        $paymentIntent = $stripeService->createPaymentIntent(5000, $customer, 'eur');
+        $paymentIntent = $stripeService->createPaymentIntent($amount, $customer, 'eur');
 
         return new JsonResponse([
             'clientSecret' => $paymentIntent->client_secret,

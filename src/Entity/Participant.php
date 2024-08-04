@@ -24,6 +24,7 @@ class Participant
     private ?Event $event = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["collection:participant", "item:user", "item:participant"])]
     private ?string $status = null;
 
     #[ORM\Column(type: Types::TEXT)]
